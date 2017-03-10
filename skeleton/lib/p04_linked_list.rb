@@ -60,9 +60,15 @@ class LinkedList
   end
 
   def get(key)
+    index = find_index { |link| link.key == key }
+    return self[index].val if self[index]
+    nil
   end
 
   def include?(key)
+    index = find_index { |link| link.key == key }
+    return true if self[index]
+    false
   end
 
   def append(key, val)
@@ -80,6 +86,17 @@ class LinkedList
   end
 
   def remove(key)
+    index = find_index { |link| link.key == key }
+
+    current_el = self[index]
+
+
+    previous_el = current_el.prev
+    next_el = current_el.next
+
+    previous_el.next = next_el
+    next_el.prev = previous_el
+
   end
 
   # def my_find_index(&prc)
