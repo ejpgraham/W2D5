@@ -90,7 +90,6 @@ class LinkedList
 
     current_el = self[index]
 
-
     previous_el = current_el.prev
     next_el = current_el.next
 
