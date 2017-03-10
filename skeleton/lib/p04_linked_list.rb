@@ -1,4 +1,7 @@
+
+
 class Link
+
   attr_accessor :key, :val, :next, :prev
 
   def initialize(key = nil, val = nil)
@@ -19,7 +22,14 @@ class Link
 end
 
 class LinkedList
+  include Enumerable
+
+  attr_accessor :head, :tail
   def initialize
+    @head = Link.new
+    @tail = Link.new
+    @head.next = @tail
+    @tail.prev = @head
   end
 
   def [](i)
@@ -27,13 +37,26 @@ class LinkedList
     nil
   end
 
+
+  def []=(i, mark)
+    each_with_index { |link, j| link.val = mark if i == j }
+    nil
+  end
+
   def first
+    self.head.next
   end
 
   def last
+    self.tail.prev
+  end
+
+  def last=(link)
+    self.tail.prev = link
   end
 
   def empty?
+     first == tail && last == head
   end
 
   def get(key)
@@ -43,19 +66,46 @@ class LinkedList
   end
 
   def append(key, val)
+    new_element = Link.new(key, val)
+
+    last.next = new_element
+    new_element.prev = last
+    self.last = new_element
+    new_element.next = self.tail
   end
 
   def update(key, val)
+    index = find_index { |link| link.key == key }
+    self[index] = val
   end
 
   def remove(key)
   end
 
-  def each
+  # def my_find_index(&prc)
+  #   index = nil
+  #   i = 0
+  #   self.each do |link|
+  #     if prc.call(link)
+  #       #need to update index
+  #       index = i
+  #     end
+  #     i += 1
+  #   end
+  #   index
+  # end
+
+  def each(&prc)
+    link = first
+    until link == self.tail
+      prc.call(link)
+      link = link.next
+    end
+
   end
 
   # uncomment when you have `each` working and `Enumerable` included
-  # def to_s
-  #   inject([]) { |acc, link| acc << "[#{link.key}, #{link.val}]" }.join(", ")
-  # end
+  def to_s
+    inject([]) { |acc, link| acc << "[#{link.key}, #{link.val}]" }.join(", ")
+  end
 end
